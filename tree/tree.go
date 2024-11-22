@@ -51,7 +51,8 @@ func (Leaf) Children() Children {
 	return NodeChildren(nil)
 }
 
-// Value of a leaf node returns its value.
+// Value of a leaf node returns its string representation.
+// If the Leaf implements fmt.Stringer, it will return the value returned by it.
 func (s Leaf) Value() string {
 	return s.value
 }
@@ -62,6 +63,7 @@ func (s Leaf) Hidden() bool {
 }
 
 // String returns the string representation of a Leaf node.
+// For leaf nodes, this is the same as Value.
 func (s Leaf) String() string {
 	return s.Value()
 }
@@ -109,6 +111,7 @@ func (t *Tree) Offset(start, end int) *Tree {
 }
 
 // Value returns the root name of this node.
+// If the root implements fmt.Stringer, it will return the value returned by it.
 func (t *Tree) Value() string {
 	return t.value
 }
@@ -205,11 +208,11 @@ func (t *Tree) EnumeratorStyle(style lipgloss.Style) *Tree {
 	return t
 }
 
-// EnumeratorStyleFunc sets the enumeration style function. Use this function
+// IndenterStyleFunc sets the indentation style function. Use this function
 // for conditional styling.
 //
 //	t := tree.New().
-//		EnumeratorStyleFunc(func(_ tree.Children, i int) lipgloss.Style {
+//		IndenterStyleFunc(func(_ tree.Children, i int) lipgloss.Style {
 //		    if selected == i {
 //		        return lipgloss.NewStyle().Foreground(hightlightColor)
 //		    }
@@ -220,6 +223,34 @@ func (t *Tree) EnumeratorStyleFunc(fn StyleFunc) *Tree {
 		fn = func(Children, int) lipgloss.Style { return lipgloss.NewStyle() }
 	}
 	t.ensureRenderer().style.enumeratorFunc = fn
+	return t
+}
+
+// IndenterStyle sets a static style for all indenters.
+//
+// Use IndenterStyleFunc to conditionally set styles based on the tree node.
+func (t *Tree) IndenterStyle(style lipgloss.Style) *Tree {
+	t.ensureRenderer().style.indenterFunc = func(Children, int) lipgloss.Style {
+		return style
+	}
+	return t
+}
+
+// IndenterStyleFunc sets the indentation style function. Use this function
+// for conditional styling.
+//
+//	t := tree.New().
+//		IndenterStyleFunc(func(_ tree.Children, i int) lipgloss.Style {
+//		    if selected == i {
+//		        return lipgloss.NewStyle().Foreground(hightlightColor)
+//		    }
+//		    return lipgloss.NewStyle().Foreground(dimColor)
+//		})
+func (t *Tree) IndenterStyleFunc(fn StyleFunc) *Tree {
+	if fn == nil {
+		fn = func(Children, int) lipgloss.Style { return lipgloss.NewStyle() }
+	}
+	t.ensureRenderer().style.indenterFunc = fn
 	return t
 }
 
@@ -289,6 +320,11 @@ func (t *Tree) Enumerator(enum Enumerator) *Tree {
 //	→ → → → → Quux
 func (t *Tree) Indenter(indenter Indenter) *Tree {
 	t.ensureRenderer().indenter = indenter
+	return t
+}
+
+func (t *Tree) Width(width int) *Tree {
+	t.ensureRenderer().width = width
 	return t
 }
 
