@@ -208,11 +208,11 @@ func (t *Tree) EnumeratorStyle(style lipgloss.Style) *Tree {
 	return t
 }
 
-// IndenterStyleFunc sets the indentation style function. Use this function
+// EnumeratorStyleFunc sets the enumeration style function. Use this function
 // for conditional styling.
 //
 //	t := tree.New().
-//		IndenterStyleFunc(func(_ tree.Children, i int) lipgloss.Style {
+//		EnumeratorStyleFunc(func(_ tree.Children, i int) lipgloss.Style {
 //		    if selected == i {
 //		        return lipgloss.NewStyle().Foreground(hightlightColor)
 //		    }
