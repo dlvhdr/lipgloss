@@ -356,8 +356,10 @@ func (t *Tree) Root(root any) *Tree {
 	case *Tree:
 		t.value = item.value
 		t = t.Child(item.children)
-	case Node, fmt.Stringer:
-		t.value = item.(fmt.Stringer).String()
+	case Node:
+		t.value = item.Value()
+	case fmt.Stringer:
+		t.value = item.String()
 	case string, nil:
 		t.value = item.(string)
 	default:

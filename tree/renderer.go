@@ -56,6 +56,10 @@ func (r *renderer) render(node Node, root bool, prefix string) string {
 
 	// print the root node name if its not empty.
 	if name := node.Value(); name != "" && root {
+		// fmt.Println("name: ", name)
+		if lipgloss.Width(name) < r.width {
+			name = name + strings.Repeat(" ", r.width-lipgloss.Width(name))
+		}
 		strs = append(strs, r.style.root.Render(name))
 	}
 
