@@ -323,6 +323,9 @@ func (t *Tree) Indenter(indenter Indenter) *Tree {
 	return t
 }
 
+// Width sets the tree width.
+//
+// Items will be padded to account for the entire width of the tree.
 func (t *Tree) Width(width int) *Tree {
 	t.ensureRenderer().width = width
 	return t

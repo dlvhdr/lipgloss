@@ -114,8 +114,8 @@ func (r *renderer) render(node Node, root bool, prefix string) string {
 			)
 
 		// If the line is shorter than the desired width, we pad it with spaces.
-		if lipgloss.Width(line) < r.width {
-			line = line + itemStyle.Render(strings.Repeat(" ", r.width-lipgloss.Width(line)))
+		if pad := r.width - lipgloss.Width(line); pad > 0 {
+			line = line + itemStyle.Render(strings.Repeat(" ", pad))
 		}
 		strs = append(
 			strs,
