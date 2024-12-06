@@ -105,13 +105,12 @@ func (r *renderer) render(node Node, root bool, prefix string) string {
 			)
 		}
 
-		line :=
-			lipgloss.JoinHorizontal(
-				lipgloss.Top,
-				multineLinePrefix,
-				nodePrefix,
-				item,
-			)
+		line := lipgloss.JoinHorizontal(
+			lipgloss.Top,
+			multineLinePrefix,
+			nodePrefix,
+			item,
+		)
 
 		// If the line is shorter than the desired width, we pad it with spaces.
 		if pad := r.width - lipgloss.Width(line); pad > 0 {
